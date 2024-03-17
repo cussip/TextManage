@@ -1,0 +1,303 @@
+void main() {
+  //클래스 사용
+  GrpMst grpMst = GrpMst();
+  grpMst.sayName();
+
+  //생성자 사용
+  GrpMst2 grpMst2 = GrpMst2('그룹2');
+  grpMst2.sayName();
+  GrpMst3 grpMst3 = GrpMst3('그룹3');
+  grpMst3.sayName();
+
+  //네임드 생성자 사용
+  GrpMstNmdConst nmdConst = GrpMstNmdConst('네임드그룹', 10);
+  nmdConst.sayName();
+  GrpMstNmdConst nmdMapConst =
+      GrpMstNmdConst.fromMap({'name': '맵그룹', 'count': 99});
+  nmdMapConst.sayName();
+
+  //프라이빗 변수 사용
+  GrpPrivVar grpPrivVar = GrpPrivVar('프라이빗그룹');
+  print('우리는 ${grpPrivVar._name} 입니다.');
+
+  //게터/세터 사용
+  GrpVo grpVo = GrpVo();
+  print('게터/세터 그룹의 현재 이름은 ${grpVo.name} 입니다');
+  grpVo.name = 'GrpChg 그룹';
+  print('게터/세터 그룹의 변경 이름은 ${grpVo.name} 입니다');
+  
+  //상속 클래스 사용
+  LowerGrp lowerGrp = LowerGrp('상속그룹', 33);
+  lowerGrp.sayName();
+  lowerGrp.sayCount();
+  lowerGrp.sayLower();
+
+  //오버라이드 사용
+  OverrideGrp overrideGrp = OverrideGrp('OverGrp', 999);
+  overrideGrp.sayName();
+  overrideGrp.sayCount();
+
+  //인터페이스 사용
+  IfGrp ifGrp = IfGrp('I/F Grp', 777);
+  ifGrp.sayName();
+  ifGrp.sayCount();
+  
+  //믹스인 사용
+  LowerGrpM lowerGrpM = LowerGrpM('믹스인', 45456);
+  lowerGrpM.sayGrpM();
+  lowerGrpM.sing();
+  
+  //추상클래스 사용
+  AbLowerGrp abLowerGrp = AbLowerGrp('추상클래스', 6667);
+  abLowerGrp.sayName();
+  abLowerGrp.sayCount();
+  
+  //제네릭 사용
+  final cache = Cache<List<int>>(
+    data: [1,2,3],
+  );
+  print(cache.data.reduce((value, element) => value + element));
+  
+  //스태틱 사용
+  Counter count1 = Counter();
+  Counter count2 = Counter();
+  Counter count3 = Counter();
+  
+  //캐스케이드 연산자 사용
+  LowerGrp cascade = LowerGrp('케스케이드', 232)
+    ..sayName()
+    ..sayCount()
+    ..sayLower();
+  
+}
+
+//============================================================================
+// 클래스(생성자, 프라이빗 변수, 게터/세터, 상속, 오버라이드, 인터페이스, 믹스인, 추상, 제네릭, 스태틱, 캐스케이드 연산자)
+//============================================================================
+/*
+ * 생성자
+ * */
+class GrpMst {
+  String name = "그룹1";
+  void sayName() {
+    print('저는 ${this.name}입니다.');
+    print('저는 $name입니다.(this생략)');
+  }
+}
+
+class GrpMst2 {
+  //생성자 선언 방법1
+  final String name;
+  GrpMst2(String name) : this.name = name;
+  void sayName() {
+    print('저는 ${this.name}입니다.');
+    print('저는 $name입니다.(this생략)');
+  }
+}
+
+class GrpMst3 {
+  //생성자 선언 방법2
+  final String name;
+  GrpMst3(this.name);
+  void sayName() {
+    print('저는 ${this.name}입니다.');
+    print('저는 $name입니다.(this생략)');
+  }
+}
+
+/*
+ * 네임드 생성자
+ * */
+class GrpMstNmdConst {
+  final String name;
+  final int count;
+
+  GrpMstNmdConst(String name, int count)
+      : this.name = name,
+        this.count = count;
+
+  GrpMstNmdConst.fromMap(Map<String, dynamic> map)
+      : this.name = map['name'],
+        this.count = map['count'];
+
+  void sayName() {
+    print('저는 ${this.name}입니다. ${this.name} 멤버는 ${this.count}명 입니다.');
+  }
+}
+
+/*
+ * 프라이빗 변수 
+ * */
+class GrpPrivVar {
+  String _name;
+  GrpPrivVar(this._name);
+}
+
+/*
+ * 게터/세터 
+ * */
+class GrpVo {
+  String _name = 'Grp 그룹';
+
+  String get name {
+    return this._name;
+  }
+
+  set name(String name) {
+    this._name = name;
+  }
+}
+
+/*
+ * 상속
+ * */
+class UpperGrp {
+  final String name;
+  final int count;
+  UpperGrp(this.name, this.count);
+
+  void sayName() {
+    print('저는 ${this.name} 입니다.');
+  }
+
+  void sayCount() {
+    print('${this.name} 멤버는 ${this.count} 명 입니다.');
+  }
+}
+
+class LowerGrp extends UpperGrp {
+  LowerGrp(String name, int count)
+      : super(
+          name,
+          count,
+        );
+
+  void sayLower() {
+    print('ㄴ=> 여기는 하위 그룹입니다.');
+  }
+}
+
+/*
+ * 오버라이드
+ * */
+class OverrideGrp extends UpperGrp {
+  OverrideGrp(
+    super.name,
+    super.count,
+  );
+  
+  @override
+  void sayName() {
+    print('오버라이드 그룹 ${this.name} 입니다.');
+  }
+}
+
+/*
+ * 인터페이스
+ *  => 여러 인터페이스 적용 가능
+ * */
+class IfGrp implements UpperGrp {
+  final String name;
+  final int count;
+  
+  IfGrp(
+    this.name,
+    this.count,
+  );
+  
+  void sayName() {
+    print('인터페이스로 구현된 ${this.name} 그룹 입니다.');
+  }
+  void sayCount() {
+    print('신규 구현된 IF그룹의 멤버는 ${this.count} 명 입니다.');
+  }
+}
+  
+/*
+ * 믹스인(Mixin)
+ * */
+mixin GrpLogicMixin on UpperGrp {
+  void sing() {
+    print('${this.name}이 믹스인의 로직에 포함되었습니다.');
+  }
+}
+
+class LowerGrpM extends UpperGrp with GrpLogicMixin {
+  LowerGrpM(
+    super.name,
+    super.count,
+  );
+  
+  void sayGrpM() {
+    print('믹스인 로직을 통과하고 있습니다.');
+  }
+}
+
+/*
+ * 추상(abstract)
+ *  => 추상 클래스는 인스턴스화가 필요 없는 공통 부모 클래스를 만들 때 사용한다.
+ * */
+abstract class AbUpperGrp {
+  final String name;
+  final int count;
+  AbUpperGrp(
+    this.name,
+    this.count,
+  );
+  void sayName();
+  void sayCount();
+}
+
+class AbLowerGrp implements AbUpperGrp {
+  final String name;
+  final int count;
+  
+  AbLowerGrp(
+    this.name,
+    this.count,
+  );
+  void sayName() {
+    print('그룹의 현재 이름은 ${this.name} 입니다');
+  }
+  void sayCount() {
+    print('저는 ${this.name}니다. 맵그룹 멤버는 ${this.count}명 입니다.');
+  }
+}
+
+/*
+ * 제네릭(generic)
+ * */
+class Cache<T> {
+  final T data;
+  
+  Cache({
+    required this.data,
+  });
+}
+
+/*
+ * 스태틱(static)
+ * */
+class Counter {
+  static int i = 0;
+  Counter() {
+    i++;
+    print(i++);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

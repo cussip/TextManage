@@ -1,0 +1,328 @@
+//한 줄 주석
+/*
+ * 여러 줄 ∏
+ * */ 
+///문서 주석: DartDoc 또는 IDE에서 문서(Documentation)로 인식
+main() {
+
+//============================================================================
+// 문법
+//============================================================================  
+  /*
+   * var: 타입 추론 기능을 제공. 명시적으로 타입을 선언하지 않아도 됨
+   *    - 타입을 한 번 유추하면 추론된 타입이 고정
+   * */
+  var name = 'Suhan';
+  print(name);
+
+  /*
+   * dynamic: 변수의 타입이 고정되지 않아서 다른 타입의 값을 저장 가능
+   * */
+  dynamic nickName = 'LUCKY';햣P
+  print(nickName);
+  nickName = 222 + 555;
+  print(nickName);
+
+  /*
+   * final / const: 변수의 값을 처음 선언 후 변경 불가
+   *    - final: 런타임 상수
+   *    - const: 빌드타임 상수
+   *    => 코드를 실행하지 않은 상태에서 값이 확정되면 const, 실행될 때 확정되면 final
+   * */
+  final DateTime finalNow = DateTime.now();
+  print(finalNow);
+  print(finalNow);
+
+  //const DateTime constNow = DateTime.now(); --에러
+  //print(constNow);
+  //DateTime.now() 함수는 런타임에 값을 반환하는데 const는 빌드타임에 값을 알 수 있어야 하기 때문
+
+  /*
+   * 변수 타입
+   *    String  : 문자열
+   *    int     : 정수
+   *    double  : 실수
+   *    bool    : 불리언(true/false)
+   * */
+
+  
+//============================================================================
+// 컬렉션
+//============================================================================
+  /*
+   * List타입: 여러 값을 순서대로 한 변수에 저장할 때 사용
+   * */
+  List<String> alpha = ['A', 'B', 'C', 'D'];
+  print(alpha);
+  print(alpha[2]);
+
+  alpha[2] = 'Z';
+  print(alpha[2]);
+
+  //length: 리스트의 길이 반환
+  alpha[alpha.length - 1] = 'X';
+  print(alpha);
+
+  //add(): List에 값을 추가
+  alpha.add('K');
+  print(alpha);
+
+  //where(): List의 값을 순회하며 필터링
+  final newAlpha = alpha.where(
+    (name) => name == 'Z' || name == 'K',
+  );
+  print(newAlpha);
+  print(newAlpha.toList());
+
+  //map(): List의 값을 순회하며 값을 변경
+  final mapAlpha = alpha.map(
+    (name) => 'map $name',
+  );
+  print(mapAlpha);
+  print(mapAlpha.toList());
+
+  //reduce(): List의 값을 순회하며 반환되는 데이터를 value, 새로운 매개변수는 element로 받아서 점차 더해가는 기능으로 사용
+  final reduceAlpha =
+      mapAlpha.reduce((value, element) => value + ', ' + element);
+  print(reduceAlpha);
+
+  //fold(): reduce()와 유사하지만 반환하는 요소의 타입에 제한이 없다. 초기값(여기선 0)을 입력한 후 reduce()와 동일하게 사용
+  final foldAlpha =
+      mapAlpha.fold<int>(0, (value, element) => value + element.length);
+  print(foldAlpha);
+
+  /*
+   * Map타입: key와 value의 짝을 저장. 키를 이용하여 원하는 값을 빠르게 찾는데 중점을 둔다
+   * */
+  Map<String, String> color = {
+    'Grey': '회색',
+    'White': '하얀색',
+    'Black': '검은색',
+    'Red': '빨간색',
+    'Blue': '파란색'
+  };
+  print(color);
+  print(color['Grey']);
+  print(color.keys);
+  print(color.values);
+
+  /*
+   * Set타입: 중복 없는 값들의 집합.
+   * */
+  Set<String> member = {'suhan', 'minji', 'teddy', 'korea', 'suhan'};
+  print(member);
+  print(member.toList());
+
+  List<String> mm2 = ['suhan', 'suhan', 'minji', 'minji'];
+  print(mm2);
+  print(Set.from(mm2));
+
+  Status status = Status.approved;
+  print(status);
+
+  calc();
+  goSwitch();
+  goFor();
+  goWhile();
+  goMethod();
+}
+
+/*
+ * enum: 한 변수의 값을 몇 가지 옵션으로 제한하는 기능
+ * */
+enum Status { approved, pending, rejected }
+
+
+//============================================================================
+// 연산자
+//============================================================================
+void calc() {
+  double number = 2;
+  print(number -1);
+  number++;
+  number++;
+  print(number);
+  
+  /*
+   * Null관련 연산자
+   *    : 타입 뒤에 '?'를 명시해야만 변수에 Null을 저장할 수 있다
+   *    : 변수에 새로운 값을 추가할때 '??'를 사용하면 기존 값이 Null인 경우에만 값이 저장된다.
+   * */
+  double number2 = 3;
+//   number2 = null;  => 에러
+  double? number3 = 3;
+  number3 = null;
+  print(number3);
+  
+  double? num4 = 10;
+  print(num4);
+  num4 ??= 100;   //기존 값이 Null이 아니기 때문에 미적용
+  print(num4);
+  num4 = null;  
+  num4 ??= 100;   //기존 값이 Null로 초기화 돠었기 때문에 100 적용
+  print(num4);
+  
+  /*
+   * 타입 비교 연산자
+   * */
+  print(number2 is int);
+  print(number2 is! String);
+  print(number2 is! int);
+  
+  /*
+   * 논리 연산자
+   * */
+  bool rslt = number2 > 1000;
+  print('논리연산자: $rslt');
+}
+
+//============================================================================
+// 제어문
+//============================================================================
+/*
+ * Switch문
+ * */
+void goSwitch() {
+  Status st = Status.approved;
+  switch(st) {
+    case Status.approved:
+      print('1st: $st');
+      break;
+    case Status.pending:
+      print('2nd: $st');
+      break;
+    case Status.rejected:
+      print('3th: $st');
+      break;
+    default:
+      print('last: $st');
+  }
+}
+
+/*
+ * For문
+ * */
+void goFor() {
+  List<String> abc = ['a', 'b', 'c'];
+  
+  for(String aa in abc) {
+    print(aa);
+  }
+  
+}
+
+/*
+ * While문 / do-while문
+ * */
+void goWhile() {
+  int tot = 0;
+  while(tot < 10) { //조건을 검증 후 반복문 실행
+    tot++;
+    print(tot);
+  }
+  do {              //최초 반복문을 실행한 후 조건을 검증
+    tot--;
+    print(tot);
+  } while(tot > 5);
+}
+
+/*
+ * Named Parameter: 순서와 관계없이 지정하고 싶은 매개변수의 이름을 지정
+ * */
+void goMethod() {
+  print(addTwoNums(a: 10, b: 33));
+  //print(addTowNums(a: 5));
+  print(addThreeNums(10, 33));
+  print(addFourNums(a: 99));
+  var addDiffNumsRslt = addDiffNums(99, b:10);
+  print('addDiffNums: $addDiffNumsRslt');
+
+  goAnon();
+  goTypeOf();
+  goTryCatch();
+}
+int addTwoNums({required int a, required int b}) {
+  return a+b;
+}
+int minusTwoNums(int a, int b) {
+  return a-b;
+}
+
+/*
+ * 기본값을 갖는 Positional Parameter
+ * */
+int addThreeNums(int a, int b, [int c = 10]) {
+  return a+b+c;
+}
+/*
+ * 기본값을 갖는 Named Parameter
+ * */
+int addFourNums({required int a, int b = 1, int c = 2, int d = 3}) {
+  return a+b+c+d;
+}
+
+/*
+ * Positional Parameter + Named Parameter
+ *    -두 가지를 섞어서 사용할 경우 Positional Parameter가 앞에 위치해야 한다
+ * */
+int addDiffNums(int a, {required int b, int c = 333}) {
+  return a+b+c;
+}
+
+//============================================================================
+// 함수와 람다
+//============================================================================
+/*
+ * 익명함수(Anonymous Funcion) & 람다함수
+ *    -Dart에서는 둘을 구분하지 않음
+ *    -익명함수: (매개변수) {함수바디}
+ *    -람다함수: (매개변수) => 단 하나의 스테이트먼트
+ * */
+void goAnon() {
+  List<int> nums = [1,2,3,4,5];
+  //익명함수
+  final allMem = nums.reduce((value, element) {
+    return value + element;
+  });
+  print('allMem: $allMem');
+  //람다함수
+  final allMem2 = nums.reduce((value, element) => value + element);
+  print('allMem2: $allMem2');
+}
+
+/*
+ * typedef와 함수
+ *    -함수의 선언부를 정의하는 키워드
+ *    -함수가 어떤 동장을 하는지에 대한 정의는 없음
+ *    -시그니처에 맞춘 함수를 만들어서 사용
+ * */
+typedef Operation = int Function(int x,int y);  
+void goTypeOf() {
+  Operation oper = minusTwoNums;
+  var operRslt = oper(33, 10);
+  print('operRslt: $operRslt');
+ 
+}
+
+/*
+ * try...catch
+ *    -시도해보고 문제가 있으면 에러를 잡음
+ * */
+void goTryCatch() {
+  try{
+    print('try 진입!');
+    throw Exception('!!! 강제 오류 생성 !!!');
+  } catch(e) {
+    print('Error: $e');
+  }
+  
+}
+
+
+
+
+
+
+
+
+

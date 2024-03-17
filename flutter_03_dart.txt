@@ -1,0 +1,114 @@
+//============================================================================
+// 동기/비동기 프로그래밍
+//============================================================================
+import 'dart:async';
+/*
+ * Future
+ *  => 어떤 미래의 값을 받아올지 지정
+ * */
+void main() async {
+  addNum(1, 1);
+  addNumAwait(2, 2);
+  addNumAwait(3, 3);
+  await addNumFuture(4, 4);
+  await addNumFuture(5, 5);
+  final result1 = await addNumRslt(6, 6);
+  print('결과1 $result1');
+  final result2 = await addNumRslt(7, 7);
+  print('결과2 $result2');  
+  
+  /*
+   * Stream
+   * */
+  final controller = StreamController();
+  final stream = controller.stream;
+  final streamListener1 = stream.listen((val){
+    print(val);
+  });
+  controller.sink.add(1);
+  controller.sink.add(2);
+  controller.sink.add(3);
+  controller.sink.add(4);
+  /*
+   * Broadcast Stream
+   * */
+  final controller2 = StreamController();
+  final stream2 = controller2.stream.asBroadcastStream();
+  final streamListener2 = stream2.listen((val){
+    print('listening 2');
+    print(val);
+  });  
+  final streamListener3 = stream2.listen((val){
+    print('listening 3');
+    print(val);
+  });   
+  controller2.sink.add(1);
+  controller2.sink.add(2);
+  controller2.sink.add(3);
+  controller2.sink.add(4);
+  
+  playStream();
+}
+
+void addNum(int num1, int num2) {
+  print('$num1 + $num2 계산 시작!');
+
+  //Future.delayed()를 사용하면 일정 시간 후에 콜백 함수를 실행할 수 있음
+  Future.delayed(Duration(seconds: 3), () {
+    print('$num1 + $num2 = ${num1 + num2}');
+  });
+
+  print('$num1 + $num2 코드 실행 끝');
+}
+
+/*
+ * async / await
+ * */
+void addNumAwait(int num1, int num2) async {      //async는 함수 매개변수 정의와 바디 사이에 입력
+  print('$num1 + $num2 계산 시작!');
+
+  await Future.delayed(Duration(seconds: 3), () { //await는 대기하고 싶은 비동기 함수 앞에 입력
+    print('$num1 + $num2 = ${num1 + num2}');
+  });
+
+  print('$num1 + $num2 코드 실행 끝');
+}
+
+Future<void> addNumFuture(int num1, int num2) async {
+  print('$num1 + $num2 계산 시작!');
+
+  await Future.delayed(Duration(seconds: 3), () { 
+    print('$num1 + $num2 = ${num1 + num2}');
+  });
+
+  print('$num1 + $num2 코드 실행 끝');  
+}
+
+Future<int> addNumRslt(int num1, int num2) async {
+  print('$num1 + $num2 계산 시작!');
+
+  await Future.delayed(Duration(seconds: 3), () { 
+    print('$num1 + $num2 = ${num1 + num2}');
+  });
+
+  print('$num1 + $num2 코드 실행 끝');  
+  return num1 + num2;
+}
+
+/*
+ * 함수로 Stream 반환하기
+ * */
+Stream<String> calculate(int number) async* {
+  for(int i = 0; i < number; i++) {
+    //StreamController의 add()처럼 yield 키워드를 이용해서 값 반환
+    yield 'i = $i';
+    await Future.delayed(Duration(seconds: 1));
+  }
+}
+
+void playStream() {
+  calculate(9).listen((val) {
+    print(val);
+  });
+}
+
